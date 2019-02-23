@@ -664,3 +664,90 @@ Node类中的value是节点值， next指针和正常单链表中next指针的�
             System.out.print(" " + stack2.pop().value);
     }
 ```
+## 16)在二叉树中找到一个节点的后继节点 
+
+现在有一种新的二叉树节点类型如下：
+public class Node { public int value; public Node left;
+public Node right; public Node parent;
+public Node(int data) { this.value = data; }
+} 
+
+该结构比普通二叉树节点结构多了一个指向父节点的parent指针。 假设有一 棵Node类型的节点组成的二叉树， 树中每个节点的parent指针都正确地指向 自己的父节点， 头节点的parent指向null。 只给一个在二叉树中的某个节点 node， 请实现返回node的后继节点的函数。 在二叉树的中序遍历的序列中， node的下一个节点叫作node的后继节点 
+
+```java
+// 左中右
+private static Node getSuccessorNode(Node test) {
+        if(test == null)
+            return null;
+        if(test.right != null)
+            return getMostLeft(test.right);
+        else{
+            Node par = test.parent;
+            while(par != null && test != par.left){
+                test = par.left;
+                par = par.parent;
+            }
+            return test;
+        }
+    }
+
+    private static Node getMostLeft(Node right) {
+        while(right.left != null){
+            right = right.left;
+        }
+        return right;
+    }
+```
+
+## 17）判断一棵二叉树是否是平衡二叉树 
+
+```java
+    static boolean ans = true;
+
+    public static boolean isBalance(Node node){
+        getHeight(node, 1, ans);
+        return ans;
+    }
+
+    public static int getHeight(Node node, int level, boolean isok){
+        if(node == null)
+            return level;
+        int h1 = getHeight(node.left, level + 1, isok);
+        if(!isok)
+            return level;
+        int h2 = getHeight(node.right, level + 1, isok);
+        if(!isok)
+            return level;
+        if(Math.abs(h1 - h2) > 1){
+            ans = false;
+            isok = false;
+        }
+        return Math.max(h1, h2);
+    }
+```
+
+## 18）判断一棵树是否是搜索二叉树 
+
+```java
+//层次遍历  ！！！ 层次！！！    
+public static boolean isCBT(Node head){
+        if(head == null)
+            return false;
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.offer(head);
+        boolean leaf = false;
+        while(!queue.isEmpty()){
+            Node node = queue.poll();
+            if(leaf && (node.left != null || node.right != null) || (node.left == null && node.right != null))
+                return false;
+            if(node.left != null)
+                queue.offer(node.left);
+            if(node.right != null)
+                queue.offer(node.right);
+            else
+                leaf = true;
+        }
+        return true;
+    }
+```
+
