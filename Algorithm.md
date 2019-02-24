@@ -750,4 +750,75 @@ public static boolean isCBT(Node head){
         return true;
     }
 ```
+## 19）已知一棵完全二叉树， 求其节点的个数 
+
+要求： 时间复杂度低于O(N)， N为这棵树的节点个数 
+
+```java
+    static  int ans = 0;
+
+    public static int nodeNum(Node head){
+        if(head == null)
+            return 0;
+        int rightH = 0;
+        if(head.right != null)
+           rightH = getMostH(head.right,0);
+        int height = getMostH(head,0);
+        if(rightH + 1  == height){
+            ans += (1 << (height - 1) ) + nodeNum(head.right);
+            System.out.println("left full" + ans);
+            return ans;
+        }else{
+            ans += (1 << rightH ) + nodeNum(head.left);
+            System.out.println("right full" + ans);
+            return ans;
+        }
+
+    }
+
+    public static int getMostH(Node head, int level){
+        while(head != null){
+            head = head.left;
+            level++;
+        }
+        return level;
+    }
+```
+
+## 20）岛问题
+
+1. 将遍历过的1改为2，清晰区别
+2. 如果有连的，一次性全扫完，如此只需要遍历就可以了
+
+```java
+    private static int R;
+    private static int C;
+
+    private static int countIslands(int[][] m) {
+        if(m == null)
+            return 0;
+        R = m.length;
+        C = m[0].length;
+        int ans = 0;
+        for(int i = 0; i < R; i++)
+            for(int j = 0; j < C; j++){
+                if(m[i][j] == 1){
+                    ans++;
+                    infect(m, i ,j);
+                }
+            }
+        return ans;
+    }
+
+    public static void infect(int[][] m ,int row, int col){
+        if(row >= R || col >= C || col < 0 || row < 0 || m[row][col] != 1)
+            return;
+        m[row][col] = 2;
+        infect(m,row - 1,col);
+        infect(m,row + 1,col);
+        infect(m,row,col + 1);
+        infect(m,row,col - 1);
+    }
+```
+
 
