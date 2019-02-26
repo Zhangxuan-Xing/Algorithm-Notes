@@ -821,4 +821,93 @@ public static boolean isCBT(Node head){
     }
 ```
 
+## 21）前缀树
+
+```java
+public static class TrieNode{
+        int end;
+        int path;
+        TrieNode[] next;
+
+        public TrieNode(){
+            end = 0;
+            path = 0;
+            next = new TrieNode[26];
+        }
+    }
+
+    public static class Trie{
+        TrieNode head;
+
+        public Trie(){
+            head = new TrieNode();
+        }
+
+        public void insert(String t){
+            if(t == null)
+                return;
+            char[] str = t.toCharArray();
+            TrieNode node = head;
+            int index;
+            for(int i = 0; i < str.length; i++){
+                index = str[i] - 'a';
+                if(node.next[index] == null){
+                    node.next[index] = new TrieNode();
+                }
+                node = node.next[index];
+                node.path++;
+            }
+            node.end++;
+        }
+
+        public  int search(String t){
+            if(t == null)
+                return 0;
+            char[] str = t.toCharArray();
+            TrieNode node = head;
+            int index;
+            for(int i = 0; i < str.length; i++){
+                index = str[i] - 'a';
+                if(node.next[index] == null){
+                    return 0;
+                }
+                node = node.next[index];
+            }
+            return node.end;
+        }
+
+        public void delete(String t){
+            if(search(t) == 0)
+                return;
+            char[] str = t.toCharArray();
+            TrieNode node = head;
+            int index;
+            for(int i = 0; i < str.length; i++){
+                index = str[i] - 'a';
+                if(--node.next[index].path == 0){
+                    node.next[index] = null;
+                    return;
+                }
+                node = node.next[index];
+            }
+            node.end--;
+        }
+
+        public int prefixNumber(String t){
+            if(t == null)
+                return 0;
+            char[] str = t.toCharArray();
+            TrieNode node = head;
+            int index;
+            for(int i = 0; i < str.length; i++){
+                index = str[i] - 'a';
+                if(node.next[index] == null){
+                    return 0;
+                }
+                node = node.next[index];
+            }
+            return node.path;
+        }
+    }
+```
 
