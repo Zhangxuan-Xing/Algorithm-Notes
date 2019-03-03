@@ -1074,3 +1074,28 @@ public static class Program {
 		return result;
 	}
 ```
+## 27）打印一个字符串的全部子序列，包括空字符串 
+
+```java
+static List list = new ArrayList();
+
+    public static void getSubquences(char[] tempS, int index){
+        if(index == tempS.length){
+            list.add(String.valueOf(tempS));
+            return;
+        }
+        char temp = tempS[index];
+        getSubquences(tempS,index + 1);
+        tempS[index] = ' ';
+        getSubquences(tempS,index+1);
+        tempS[index] = temp;
+    }
+
+    public static void main(String[] args) {
+        String s = "abs";
+        char[] arry = s.toCharArray();
+        getSubquences(arry,0);
+        for(Object l : list)
+            System.out.println(l);
+    }
+```
