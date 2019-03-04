@@ -1099,3 +1099,29 @@ static List list = new ArrayList();
             System.out.println(l);
     }
 ```
+## 28）二维数组最小路径和
+
+给你一个二维数组， 二维数组中的每个数都是正数， 要求从左上角走到右下角， 每一步只能向右或者向下。 沿途经过的数字要累加起来。 返回最小的路径和 
+
+```java
+    // 开辟dp缓存 避免重复计算
+	public static int minPath(int[][] m){
+        if(m == null)
+            return 0;
+        int R = m.length;
+        int C = m[0].length;
+        int[][] dp = new int[R][C];
+        dp[R - 1][C - 1] = m[R -1][C - 1];
+        for(int i = R - 2; i >= 0; i--){
+            dp[i][C - 1] = m[i][C - 1] + dp[i + 1][C - 1];
+        }
+        for(int i = C - 2; i >= 0; i--){
+            dp[R - 1][i] = m[R - 1][i] + dp[R - 1][i + 1];
+        }
+        for(int i = R - 2; i >= 0 ; i--)
+            for(int j = C - 2; j >= 0;j--){
+                dp[i][j] = Math.min(m[i][j] + dp[i+1][j],m[i][j]+dp[i][j+1]);
+            }
+        return dp[0][0];
+    }
+```
