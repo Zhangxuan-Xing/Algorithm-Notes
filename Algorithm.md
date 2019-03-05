@@ -1125,3 +1125,28 @@ static List list = new ArrayList();
         return dp[0][0];
     }
 ```
+## 29）滑动窗口
+
+如上应返回 555467
+
+```java
+private static int[] getMaxW(int[] arr, int window) {
+        if(arr == null || window > arr.length || window < 1)
+            return null;
+        LinkedList<Integer> max = new LinkedList<>();
+        int[] ans = new int[arr.length - window + 1];
+        int index = 0;
+        for(int i = 0; i < arr.length;i++){
+            while (!max.isEmpty() && arr[max.peekLast()] < arr[i]){
+                max.pollFirst();
+            }
+            max.addLast(i);
+            if(max.peekFirst() == i - window){
+                max.pollFirst();
+            }
+            if(i >= window - 1)
+                ans[index++] = arr[max.peekFirst()];
+        }
+        return ans;
+    }
+```
