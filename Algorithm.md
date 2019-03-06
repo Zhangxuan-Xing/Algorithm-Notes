@@ -1150,3 +1150,58 @@ private static int[] getMaxW(int[] arr, int window) {
         return ans;
     }
 ```
+## 30）子数组最大差值小于某阈值，求满足条件的子数组个数
+
+解法思路：
+
+ 　　本题其实是滑动窗口的变形。主体思路为：
+
+　　１．从第一个元素开始依次向后遍历，同时维护两个窗口（由于要同时操作窗口的头部和尾部，故采用双端队列）：
+
+　　　　　　最大值窗口（递减），头部永远存最大值
+
+　　　　　　最小值窗口（递增），头部永远存最小值
+
+　　２．比较两个窗口的头部元素差值，若差值大于阈值，即可跳出内循环。
+
+　　３．跳出内循环后，检查头部元素是否过期，若过期，则清除。
+
+复杂度：
+
+　　时间复杂度：O(n)，注意虽然是两层循环，但元素只从滑动窗口尾部进，从头部清除，只是顺序扫描了一遍。
+
+　　空间复杂度：O(n),这里利用两个滑动窗口分别保存最大值和最小值。
+
+```java
+    private static int getNum(int[] arr, int num) {
+        if(arr == null || arr.length < 1)
+            return 0;
+        int res = 0;
+        int i = 0;
+        int j = 0;
+        LinkedList<Integer> max = new LinkedList<>();
+        LinkedList<Integer> min = new LinkedList<>();
+        while(i < arr.length) {
+            while (j < arr.length) {
+                while (!min.isEmpty() && arr[min.peekLast()] >= arr[j]) {
+                    min.pollLast();
+                }
+                min.addLast(j);
+                while (!max.isEmpty() && arr[max.peekLast()] <= arr[j]) {
+                    max.pollLast();
+                }
+                max.addLast(j);
+                if (arr[max.peekFirst()] - arr[min.peekFirst()] > num)
+                    break;
+                j++;
+            }
+            if(min.peekFirst() == i)
+                min.pollFirst();
+            if(max.peekFirst() == i)
+                max.pollFirst();
+            res += j - i;
+            i++;
+        }
+        return res;
+    }
+```
