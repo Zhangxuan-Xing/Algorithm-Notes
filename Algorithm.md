@@ -1205,3 +1205,47 @@ private static int[] getMaxW(int[] arr, int window) {
         return res;
     }
 ```
+## 31）最大子矩阵大小
+
+```java
+public static int maxRecSize(int[][] map){
+        if(map == null || map.length == 0 || map[0].length == 0)
+            return 0;
+        int maxArea = 0;
+        int rowL = map.length;
+        int colL = map[0].length;
+        int[] height = new int[colL];
+        for(int i = 0; i < rowL; i++){
+            for(int j = 0; j < colL; j++){
+                height[j] += map[i][j] == 0 ? 0 : height[j] + 1;
+            }
+            maxArea = Math.max(maxArea,getArea(height));
+        }
+        return  maxArea;
+    }
+
+    public static int getArea(int[] height){
+        if(height == null || height.length == 0)
+            return 0;
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        int len = height.length;
+        for(int i = 0; i < len; i++){
+            while (!stack.isEmpty() && height[stack.peek()] >= height[i]){
+                int j = stack.pop();
+                int k = stack.isEmpty() ? -1 : stack.peek();
+                int areaTemp = (i - k -1)*height[j];
+                maxArea = Math.max(maxArea,areaTemp);
+            }
+            stack.add(i);
+        }
+        while (!stack.isEmpty()){
+            int j = stack.pop();
+            int k = stack.isEmpty() ? -1 : stack.peek();
+            int areaTemp = (len - k -1)*height[j];
+            maxArea = Math.max(maxArea,areaTemp);
+        }
+        return  maxArea;
+    }
+```
+
