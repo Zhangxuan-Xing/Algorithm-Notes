@@ -1248,4 +1248,28 @@ public static int maxRecSize(int[][] map){
         return  maxArea;
     }
 ```
+## 32）累加和为aim的最长子数组
+
+如7,3,2,1,1,7,7,7  求aim的最长子数组的长度为4
+
+```java
+    public static int maxLength(int[] arr, int aim){
+        if(arr == null || arr.length == 0)
+            return 0;
+        int sum = 0;
+        int maxLen = 0;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        map.put(0,-1);
+        for(int i = 0,len = arr.length; i < len; i++){
+            sum += arr[i];
+            if(map.containsKey(sum - aim)){
+                int last = map.get(sum - aim);
+                maxLen = Math.max(i - last,maxLen);
+            }
+            if(!map.containsKey(sum))
+                map.put(sum,i);
+        }
+        return  maxLen;
+    }
+```
 
