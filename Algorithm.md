@@ -1310,4 +1310,40 @@ public static int maxRecSize(int[][] map){
         return new ReturnData(right.size,right.node,right.max,right.min);
     }
 ```
+## 35）二叉树的最远距离
+
+二叉树中， 一个节点可以往上走和往下走， 那么从节点A总能走到节点B。
+节点A走到节点B的距离为： A走到B最短路径上的节点个数。
+求一棵二叉树上的最远距离 
+
+```java
+    public static class ReturnData{
+        public int h;
+        public int maxD;
+
+        public ReturnData(int h,int maxD){
+            this.h = h;
+            this.maxD = maxD;
+        }
+    }
+
+    public static int maxDistance(Node head){
+        if(head == null)
+            return 0;
+        ReturnData ans = process(head);
+        return ans.maxD;
+    }
+
+    private static ReturnData process(Node head) {
+        if(head == null)
+            return new ReturnData(0,0);
+        ReturnData ldata = process(head.left);
+        ReturnData rdata = process(head.right);
+        int curH = ldata.h + rdata.h + 1;
+        int maxD = Math.max(curH,Math.max(ldata.maxD, rdata.maxD));
+        int maxH = Math.max(rdata.h,ldata.h) + 1;
+        return new ReturnData(maxH,maxD);
+    }
+```
+
 
