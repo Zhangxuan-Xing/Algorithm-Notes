@@ -1345,5 +1345,61 @@ public static int maxRecSize(int[][] map){
         return new ReturnData(maxH,maxD);
     }
 ```
+## 36）最大活跃值
 
+一个公司的上下节关系是一棵多叉树， 这个公司要举办晚会， 你作为组织者已经摸清了大家的心理： 一个员工的直
+接上级如果到场， 这个员工肯定不会来。 每个员工都有一个活跃度的值， 决定谁来你会给这个员工发邀请函， 怎么
+让舞会的气氛最活跃？ 返回最大的活跃值。
+举例：
+给定一个矩阵来表述这种关系
+matrix =
+{ 1,6
+1,5
+1,4
+} 这个矩阵的含义是：
+matrix[0] = {1 , 6}， 表示0这个员工的直接上级为1,0这个员工自己的活跃度为6
+matrix[1] = {1 , 5}， 表示1这个员工的直接上级为1（他自己是这个公司的最大boss） ,1这个员工自己的活跃度为5
+matrix[2] = {1 , 4}， 表示2这个员工的直接上级为1,2这个员工自己的活跃度为4
+为了让晚会活跃度最大， 应该让1不来， 0和2来。 最后返回活跃度为10 
+
+```java
+public static class Node{
+        int happy;
+        List<Node> nexts;
+
+        public Node(int happy){
+            this.happy = happy;
+            nexts = new ArrayList<>();
+        }
+    }
+
+    public static class ReturnData{
+        public int accept;
+        public int refuse;
+
+        public ReturnData(int a, int r){
+            this.accept = a;
+            this.refuse = r;
+        }
+    }
+
+    public static ReturnData process(Node head){
+        if(head == null)
+            return new ReturnData(0,0);
+        int accept = head.happy;
+        int refuse = 0;
+        for(int i = 0; i < head.nexts.size(); i++){
+            Node temp = head.nexts.get(i);
+            ReturnData rd = process(temp);
+            accept += rd.refuse;
+            refuse += Math.max(rd.accept, rd.refuse);
+        }
+        return new ReturnData(accept,refuse);
+    }
+
+    public static int maxHappy(Node head){
+        ReturnData ans = process(head);
+        return Math.max(ans.accept,ans.refuse);
+    }
+```
 
