@@ -1402,4 +1402,63 @@ public static class Node{
         return Math.max(ans.accept,ans.refuse);
     }
 ```
+## 37）博弈取数
 
+有一排正数，玩家A和玩家B都可以看到。每位玩家在拿走数字的时候，都只能从最左和最右的数中选择一个。玩家A先拿，玩家B再拿，两人交替拿走所有的数字，两人都力争自己拿到的数的总和比对方多。请返回最后获胜者的分数。
+例如：
+5,2,3,4
+玩家A先拿，当前他只能拿走5或者4。
+如果玩家A拿走5，那么剩下2，3，4。轮到玩家B，此时玩家B可以选择2或4中的一个，…
+如果玩家A拿走4，那么剩下5，2，3。轮到玩家B，此时玩家B可以选择5或3中的一个，…
+
+```java
+public static void main(String[] args) {
+        int[] test = {5,2,3,4,51,23,5,6};
+        System.out.println(getWinOne(test));
+        System.out.println(getWinTwo(test));
+    }
+
+    private static int getWinTwo(int[] arr) {
+        int len = arr.length;
+        if(arr == null || len == 0)
+            return 0;
+        int sum = 0;
+        for(int i = 0; i < len; i++)
+            sum += arr[i];
+        int[][] dp = new int[len][len];
+        for(int i = 0; i < len; i++)
+            dp[i][i] = arr[i];
+        for (int i = 0; i < len - 1; i++)
+            dp[i][i+1] = Math.max(arr[i],arr[i + 1]);
+        for (int k = 2; k < arr.length; k++) {
+            for (int j = k; j < arr.length; j++) {
+                int i = j - k;
+                dp[i][j] = Math.max(arr[i] + Math.min(dp[i + 2][j], dp[i + 1][j - 1]),
+                        arr[j] + Math.min(dp[i + 1][j - 1], dp[i][j - 2]));
+            }
+        }
+        return Math.max(dp[0][len - 1], sum - dp[0][len - 1]);
+    }
+
+    private static int getWinOne(int[] test) {
+        int len = test.length;
+        if(test == null || len == 0)
+            return 0;
+        int sum = 0;
+        for(int i = 0; i < len; i++)
+            sum += test[i];
+        int maxA = firstP(test, 0, len - 1);
+        return Math.max(maxA, sum - maxA);
+    }
+
+    public static int firstP(int[] arr, int from, int to){
+        if(from == to)
+            return arr[from];
+        if(to - from == 1)
+            return Math.max(arr[from],arr[to]);
+        int max = 0;
+        max = Math.max(arr[from] + Math.min(firstP(arr,from + 1, to - 1),firstP(arr, from + 2, to)),
+                    arr[to] + Math.min(firstP(arr, from + 1, to - 1),firstP(arr, from, to - 2)));
+        return max;
+    }
+```
