@@ -475,7 +475,6 @@ public static class Node {
         return arr[0];
     }
 
-    //先断开  后连接  确保顺序
     private static Node listPartition2(Node head, int pivot) {
         Node ss = null;
         Node se = null;
