@@ -1461,3 +1461,109 @@ public static void main(String[] args) {
         return max;
     }
 ```
+## 38）Top K问题
+
+```java
+    public static class Node{
+        String str;
+        int times;
+
+        public Node(String s, int times){
+            this.str = s;
+            this.times = times;
+        }
+    }
+
+    public static class TopKRecord{
+        Node[] heap;
+        int index;
+        HashMap<String,Node> strNodeMap;
+        HashMap<Node,Integer> indexNodeMap;
+
+        public TopKRecord(int size){
+            heap = new Node[size];
+            index = 0;
+            strNodeMap = new HashMap<>();
+            indexNodeMap = new HashMap<>();
+        }
+
+        public void add(String str){
+            if(str == null)
+                return;
+            int preIndex = -1;
+            Node currNode = null;
+            if(!strNodeMap.containsKey(str)){
+                currNode = new Node(str,1);
+                strNodeMap.put(str,currNode);
+                indexNodeMap.put(currNode,-1);
+            }else{
+                currNode = strNodeMap.get(str);
+                preIndex = indexNodeMap.get(currNode);
+                currNode.times++;
+            }
+            if(preIndex == -1){
+                if(index == heap.length){
+                    if(currNode.times > heap[0].times){
+                        indexNodeMap.put(currNode,0);
+                        indexNodeMap.put(heap[0],-1);
+                        heap[0] = currNode;
+                        heapify(0,index);
+                    }
+                }else{
+                    indexNodeMap.put(currNode,index);
+                    heap[index] = currNode;
+                    heapInsert(index++);
+                }
+            }else{
+                heapify(preIndex,index);
+            }
+        }
+
+        public void heapInsert(int index){
+            while(index > 0){
+                int parent = (index - 1)/2;
+                if(heap[parent].times > heap[index].times){
+                    swap(parent,index);
+                    index = parent;
+                }else
+                    break;
+            }
+        }
+
+        public void heapify(int index,int size){
+            int l = index*2 + 1;
+            int r = index*2 + 1;
+            int smallest = index;
+            while (l < size){
+                if(heap[smallest].times > heap[l].times)
+                   smallest = l;
+                if(r < size && heap[smallest].times > heap[r].times)
+                    smallest = r;
+                if(smallest != index)
+                    swap(smallest, index);
+                else
+                    break;
+                index = smallest;
+                l = index*2 + 1;
+                r = index*2 + 2;
+            }
+
+        }
+
+        public void printTopK(){
+            for(int i = 0; i != heap.length; i++){
+                if(heap[i] == null)
+                    break;
+                System.out.println(heap[i].str + "..."+ heap[i].times);
+            }
+        }
+
+        public void swap(int index1, int index2) {
+            indexNodeMap.put(heap[index1], index2);
+            indexNodeMap.put(heap[index2], index1);
+            Node tmp = heap[index1];
+            heap[index1] = heap[index2];
+            heap[index2] = tmp;
+        }
+    }
+```
