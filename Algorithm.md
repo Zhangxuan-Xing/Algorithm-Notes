@@ -1567,3 +1567,36 @@ public static void main(String[] args) {
         }
     }
 ```
+## 39）从上往下打印二叉树节点
+
+从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+
+```java
+    public class Solution {
+    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
+        Queue<Integer> queue = new LinkedList<Integer>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        if(root == null)
+            return list;
+        queue.add(root.val);
+        allTree(root,queue);
+        for(Integer q : queue){
+            list.add(q);
+        }
+        return list;
+    }
+    
+    public static void allTree(TreeNode root,Queue<Integer> queue) {
+        if(root == null)
+            return ;
+        if(root.left != null)
+            queue.add(root.left.val);
+        if(root.right != null)
+            queue.add(root.right.val);
+        if(root.left != null)
+            allTree(root.left,queue);
+        if(root.right != null)
+            allTree(root.right,queue);
+    }
+}
+```
