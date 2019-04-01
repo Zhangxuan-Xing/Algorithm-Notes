@@ -1660,3 +1660,40 @@ public static int findKthNum(int[] arr1, int[] arr2, int kth) {
 		return Math.min(a1[s1], a2[s2]);
 	}
 ```
+## 42）最小包含子串长度
+
+```java
+    public static int minLength(String s1, String s2){
+        if(s1 == null || s2 == null || s1.length() < s2.length())
+            return 0;
+        char[] chars1 = s1.toCharArray();
+        char[] chars2 = s2.toCharArray();
+        int[] map = new int[256];
+        int sumMatch = chars2.length;
+        for(int i = 0; i < sumMatch; i++){
+            map[chars2[i]]++;
+        }
+        int left = 0;
+        int right = 0;
+        int lenC = chars1.length;
+        int minLen = Integer.MAX_VALUE;
+        while(right != lenC){
+            if(map[chars1[right]] > 0){
+                sumMatch--;
+            }
+            map[chars1[right]]--;
+            if(sumMatch == 0){
+                while(map[chars1[left]] < 0){
+                    map[chars1[left]]++;
+                    left++;
+                }
+                minLen = Math.min(minLen,right - left + 1);
+                map[chars1[left]]++;
+                left++;
+                sumMatch++;
+            }
+            right++;
+        }
+        return minLen;
+    }
+```
