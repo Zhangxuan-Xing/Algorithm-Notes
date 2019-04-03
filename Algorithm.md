@@ -1697,3 +1697,29 @@ public static int findKthNum(int[] arr1, int[] arr2, int kth) {
         return minLen;
     }
 ```
+## 43）01最长连续交错串
+
+```java
+    public static int maxLength(int[] arr, int aim){
+        int len = arr.length;
+        if(arr == null || len == 0)
+            return 0;
+        for(int i = 0; i < len; i++)
+            if(arr[i] == 0)
+                arr[i] = -1;
+        int sum = 0;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        map.put(0,-1);
+        int maxL = 0;
+        for(int i = 0;i < len; i++){
+            sum += arr[i];
+            if(!map.containsKey(sum))
+                map.put(sum,i);
+            if(map.containsKey(sum - aim))
+                maxL = Math.max(i - map.get(sum - aim),maxL);
+        }
+        return maxL;
+    }
+```
+
+
