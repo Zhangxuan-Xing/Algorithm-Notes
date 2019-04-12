@@ -1788,3 +1788,55 @@ public static class Dot{
 1. AVL：高度平衡，左右树高度差不超过1
 2. 红黑树：头节点必为黑、叶节点必为黑、相邻不能出现连续红、任何一个链黑色节点量差不多（最长链和最短链的高度差不超过两倍）
 调整的基本动作：左旋（逆时针旋转）和右旋（顺时针旋转）
+
+## 46）堆排序
+
+时间复杂度：O（N*log N）
+
+空间复杂度：O（1）
+
+1. 堆结构的 heap Insert 和 heapify
+2. 堆结构的增大和减少
+3. 如果只是建立堆的过程，时间复杂度为O（N）
+4. 优先级队列结构，就是堆结构
+
+```java
+    public static void heapSort(int[] arr){
+        int len = arr.length;
+        if(arr == null || len < 2)
+            return ;
+        for(int i = 0; i < len; i++)
+            heapInsert(arr,i);
+        swap(arr,0,--len);
+        while(len > 0){
+            heapify(arr,0,len);
+            swap(arr,0,--len);
+        }
+    }
+
+    private static void heapify(int[] arr, int index, int size) {
+        int left = index * 2 + 1;
+        while(left < size){
+            int largest = left + 1 < size && arr[left + 1] > arr[left] ? left + 1: left;
+            largest = arr[largest] > arr[index] ? largest : index;
+            if(largest == index)
+                break;
+            swap(arr,largest,index);
+            index = largest;
+            left = index * 2 + 1;
+        }
+    }
+
+    private static void heapInsert(int[] arr, int index) {
+        while(arr[index] > arr[(index - 1)/2]){
+            swap(arr,index,(index - 1)/2);
+            index = (index - 1)/2;
+        }
+    }
+
+    public static void swap(int[] arr, int i, int j){
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+```
