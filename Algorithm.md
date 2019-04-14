@@ -1877,3 +1877,64 @@ public static class Dot{
         return minLen;
     }
 ```
+## 48）最多信封问题
+
+```java
+public static class Dot{
+        int w;
+        int h;
+        
+        public Dot(int w, int h){
+            this.w = w;
+            this.h = h;
+        }
+    }
+    
+    public static class DotComparator implements Comparator<Dot>{
+        @Override
+        public int compare(Dot o1, Dot o2) {
+            if(o1.w != o2.w)
+                return o1.w - o2.w;
+            else
+                return o2.h - o1.h;
+        }
+    }
+
+    public static int maxEnvelopes(int[][] arr) {
+        if(arr == null || arr.length == 0 || arr[0].length != 2)
+            return 0;
+        int len = arr.length;
+        Dot[] dots = new Dot[len];
+        for(int i = 0; i < len; i++)
+            dots[i] = new Dot(arr[i][0],arr[i][1]);
+        Arrays.sort(dots,new DotComparator());
+        for(int i = 0; i < len; i++){
+            System.out.println(dots[i].h + "...");
+        }
+        int[] ends = new int[len];
+        int right = 0;
+        int r = 0;
+        int l = 0;
+        int m = 0;
+        ends[0] = dots[0].h;
+        for(int i = 1; i < len; i++){
+            l = 0;
+            r = right;
+            while(l <= r){
+                m = l + (r - l)/2;
+                if(dots[i].h > ends[m])
+                    l = m + 1;
+                else
+                    r = m - 1;
+            }
+            right = Math.max(right, l);
+            ends[l] = dots[i].h;
+        }
+        return right + 1;
+    }
+
+    public static void main(String[] args) {
+        int[][] test = { { 4, 3 }, { 1, 2 }, { 5, 7 }, { 5, 3 }, { 1, 1 }, { 4, 9 } };
+        System.out.println(maxEnvelopes(test));
+    }
+```
