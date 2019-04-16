@@ -1938,3 +1938,74 @@ public static class Dot{
         System.out.println(maxEnvelopes(test));
     }
 ```
+## 49）正数数组最小不可组成和
+
+```java
+    public static int unformedSum1(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return 1;
+        }
+        HashSet<Integer> set = new HashSet<Integer>();
+        process(arr, 0, 0, set);
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i != arr.length; i++) {
+            min = Math.min(min, arr[i]);
+        }
+        for (int i = min + 1; i != Integer.MIN_VALUE; i++) {
+            if (!set.contains(i)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public static void process(int[] arr, int i, int sum, HashSet<Integer> set) {
+        if (i == arr.length) {
+            set.add(sum);
+            return;
+        }
+        process(arr, i + 1, sum, set);
+        process(arr, i + 1, sum + arr[i], set);
+    }
+
+    public static int unformedSum2(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return 1;
+        }
+        int sum = 0;
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i != arr.length; i++) {
+            sum += arr[i];
+            min = Math.min(min, arr[i]);
+        }
+        boolean[] dp = new boolean[sum + 1];
+        dp[0] = true;
+        for (int i = 0; i != arr.length; i++) {
+            for (int j = sum; j >= arr[i]; j--) {
+                dp[j] = dp[j - arr[i]] ? true : dp[j];
+            }
+        }
+        for (int i = min; i != dp.length; i++) {
+            if (!dp[i]) {
+                return i;
+            }
+        }
+        return sum + 1;
+    }
+
+    public static int unformedSum3(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        Arrays.sort(arr);
+        int range = 0;
+        for (int i = 0; i != arr.length; i++) {
+            if (arr[i] > range + 1) {
+                return range + 1;
+            } else {
+                range += arr[i];
+            }
+        }
+        return range + 1;
+    }
+```
