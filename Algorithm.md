@@ -2009,3 +2009,35 @@ public static class Dot{
         return range + 1;
     }
 ```
+## 50）逆置序列
+
+```java
+public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		while (in.hasNextInt()) {
+			int n = in.nextInt();
+			Deque<Integer> deque = new LinkedList<Integer>();
+			boolean convert = false;
+			for (int i = 0; i < n; i++) {
+				if (convert) {
+					deque.addLast(in.nextInt());
+				} else {
+					deque.addFirst(in.nextInt());
+				}
+				convert = !convert;
+			}
+			if (convert) {
+				while (deque.size() != 1) {
+					System.out.print(deque.pollFirst() + " ");
+				}
+				System.out.println(deque.pollFirst());
+			} else {
+				while (deque.size() != 1) {
+					System.out.print(deque.pollLast() + " ");
+				}
+				System.out.println(deque.pollLast());
+			}
+		}
+		in.close();
+	}
+```
