@@ -2041,3 +2041,125 @@ public static void main(String[] args) {
 		in.close();
 	}
 ```
+## 51）单向链表-荷兰国旗问题
+
+给定一个单向链表的头节点head， 节点的值类型是整型， 再给定一个整数pivot。 实现一个调整链表的函数， 将链表调整为左部分都是值小于 pivot的节点， 中间部分都是值等于pivot的节点， 右部分都是值大于 pivot的节点。
+除这个要求外， 对调整后的节点顺序没有更多的要求。 例如： 链表9->0->4->5-1， pivot=3。 调整后链表可以是1->0->4->9->5， 也可以是0->1->9->5->4。 总之， 满 足左部分都是小于3的节点， 中间部分都是等于3的节点（本例中这个部
+分为空） ， 右部分都是大于3的节点即可。 对某部分内部的节点顺序不做要求 
+
+进阶： 在原问题的要求之上再增加如下两个要求。
+在左、 中、 右三个部分的内部也做顺序要求， 要求每部分里的节点从左 到右的顺序与原链表中节点的先后次序一致 
+
+```java
+ public static class Node {
+        public int value;
+        public Node next;
+
+        public Node(int data) {
+            this.value = data;
+        }
+    }
+
+    //Node类型数组  转为荷兰国旗做法  但不能保证稳定性
+    private static Node listPartition1(Node head, int pivot) {
+        if(head == null)
+            return null;
+        int i = 0;
+        Node current = head;
+        while(current != null){
+            i++;
+            current = current.next;
+        }
+        Node[] arr = new Node[i];
+        current = head;
+        for(int j = 0 ; j < i; j++){
+            arr[j] = current;
+            current = current.next;
+        }
+        partition(arr,pivot);
+        for(int j = 1; j < i; j++)
+            arr[j - 1].next = arr[j];
+        arr[i - 1].next = null;
+        return arr[0];
+    }
+
+    //先断开  后连接  确保顺序
+    private static Node listPartition2(Node head, int pivot) {
+        Node ss = null;
+        Node se = null;
+        Node es = null;
+        Node ee = null;
+        Node ls = null;
+        Node le = null;
+        Node curr = head;
+        Node temp = null;
+        while(curr != null){
+            temp = curr.next;
+            curr.next = null;
+            if(curr.value < pivot){
+                if(ss == null){
+                    ss = curr;
+                    se = curr;
+                }else{
+                    se.next = curr;
+                    se = curr;
+                }
+            }else if(curr.value == pivot){
+                if(es == null){
+                    es = curr;
+                    ee = curr;
+                }else{
+                    ee.next = curr;
+                    ee = curr;
+                }
+            }else{
+                if(ls == null){
+                    ls = curr;
+                    le = curr;
+                }else{
+                    le.next = curr;
+                    le = curr;
+                }
+            }
+            curr = temp;
+        }
+        if(se != null){
+            se.next = es;
+            ee = ee == null ? es :ee;
+        }
+        if(ee != null){
+            ee.next = ls;
+            le = le == null ? ls : le;
+        }
+        return ss != null ? ss : es != null ? es : ls;
+    }
+
+    public static void partition(Node[] arr, int pivot){
+        int less = -1;
+        int larger = arr.length;
+        int curr = 0;
+        while(curr < larger){
+            if(arr[curr].value < pivot){
+                swap(arr,++less,curr++);
+            }else if(arr[curr].value > pivot){
+                swap(arr,--larger,curr);
+            }else
+                curr++;
+        }
+    }
+
+    public static void swap(Node[] nodeArr, int a, int b) {
+        Node tmp = nodeArr[a];
+        nodeArr[a] = nodeArr[b];
+        nodeArr[b] = tmp;
+    }
+
+    public static void printLinkedList(Node node) {
+        System.out.print("Linked List: ");
+        while (node != null) {
+            System.out.print(node.value + " ");
+            node = node.next;
+        }
+        System.out.println();
+    }
+```
