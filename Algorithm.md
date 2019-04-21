@@ -2163,3 +2163,42 @@ public static void main(String[] args) {
         System.out.println();
     }
 ```
+## 52）最大子搜索二叉树
+
+```java
+    public static class ReturnData{
+        int size;
+        Node node;
+        int max;
+        int min;
+
+        public ReturnData(int size, Node node, int max, int min){
+            this.size = size;
+            this.max = max;
+            this.min = min;
+            this.node = node;
+        }
+    }
+
+    public static Node biggestSubBST(Node head){
+        ReturnData ans = process(head);
+        return ans.node;
+    }
+
+    public static ReturnData process(Node head){
+        if(head == null)
+            return new ReturnData(0,null,Integer.MIN_VALUE,Integer.MAX_VALUE);
+        ReturnData left = process(head.left);
+        ReturnData right = process(head.right);
+        if(left.node == head.left && right.node == head.right
+        && head.value > left.max && head.value < right.min){
+                return new ReturnData(left.size + 1 + right.size,head,
+                        right.max > head.value ? right.max : head.value,
+                        left.min < head.value ? left.min :head.value);
+        }
+        if(left.size > right.size)
+            return new ReturnData(left.size,left.node,left.max,left.min);
+        return new ReturnData(right.size,right.node,right.max,right.min);
+    }
+```
+
